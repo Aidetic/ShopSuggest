@@ -66,10 +66,10 @@ config_file["light_fm"] = {
     "model_epochs": 10,
     "seed": 23,
 }
-####################-END OF INPUTS-##########################
 
 if TRUSTED_CONNECTION is None:
     db_connection_string = "/../data/aid_db.db"
+####################-END OF INPUTS-##########################
 elif TRUSTED_CONNECTION:
     db_connection_string = f"DRIVER={DATABASE_DRIVER};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};Trusted_Connection=yes;"
 else:
