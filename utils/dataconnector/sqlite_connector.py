@@ -34,7 +34,7 @@ class SQLiteDataConnector(BaseDataConnector):
 
     def connect(self, connection_string: str):
         self.connection = sqlite3.connect(
-            BASE_PATH + connection_string
+            os.path.join(BASE_PATH, connection_string)
         )  # "/../data/aid_db.db"
         self.cursor = self.connection.cursor()
         # for i in range(5):

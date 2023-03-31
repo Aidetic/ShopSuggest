@@ -233,16 +233,18 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
 
     def find_latest_model(self, CompanyId: int):
         BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        PATH_NAME = "/../model/"
+        PATH_NAME = os.path.join("..", "model")
 
         all_models = [
-            path for path in os.listdir(BASE_PATH + PATH_NAME) if str(CompanyId) in path
+            path
+            for path in os.listdir(os.path.join(BASE_PATH, PATH_NAME))
+            if str(CompanyId) in path
         ]
         if not all_models:
             return None
         latest_model = max(all_models, key=lambda x: int(x[-12:-4]))
         logger.info(f"Latest model is: {latest_model}")
-        return BASE_PATH + PATH_NAME + latest_model
+        return os.path.join(BASE_PATH, PATH_NAME, latest_model)
 
     def load_and_predict(self, CompanyId, UserId, MaxResults=10):
         model_save_path = self.find_latest_model(CompanyId=CompanyId)
@@ -418,15 +420,23 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
         logger.info(f"Hybrid training set AUC: {train_auc}")
 
         BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        PATH_NAME = os.path.join("..", "model")
         FILE_NAME = (
-            "/../model/model_"
+            "model_"
             + str(CompanyId)
             + datetime.strftime(datetime.now(), "_%Y%m%d")
             + ".pkl"
         )
 
-        joblib.dump((item_features, dataset, model), BASE_PATH + FILE_NAME)
-        logger.info(f"Model saved to {BASE_PATH + FILE_NAME}")
+        # if path doesn't exist, create path
+        if not os.path.exists(os.path.join(BASE_PATH, PATH_NAME)):
+            os.makedirs(os.path.join(BASE_PATH, PATH_NAME))
+
+        joblib.dump(
+            (item_features, dataset, model),
+            os.path.join(BASE_PATH, PATH_NAME, FILE_NAME),
+        )
+        logger.info(f"Model saved to {os.path.join(BASE_PATH, PATH_NAME, FILE_NAME)}")
 
         return {
             "code": True,
