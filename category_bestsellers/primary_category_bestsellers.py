@@ -83,7 +83,7 @@ class CategoryBestsellers(BaseCategoryBestsellers):
         bestseller_data_create_query = (
             query_head
             + f"""
-            CompanyId INT,
+            {config["bestseller_data"]["company_id_col"]} INT,
             {config["bestseller_data"]["primary_category_col"]} VARCHAR(255),
             {config["bestseller_data"]["secondary_category_col"]} VARCHAR(255),
             {config["bestseller_data"]["product_id_col"]} VARCHAR(255),
@@ -102,7 +102,7 @@ class CategoryBestsellers(BaseCategoryBestsellers):
             delete from 
                 {bestseller_data_table_name}
             where
-                CompanyId={CompanyId}
+                {config["bestseller_data"]["company_id_col"]}={CompanyId}
         ;"""
         connection_string = config["db_config"]["db_connection_string"]
         sql_connector.remove_data(
@@ -195,7 +195,7 @@ class CategoryBestsellers(BaseCategoryBestsellers):
             }
         logger.info("Data Loaded from Database!")
 
-        bestseller_data["CompanyId"] = CompanyId
+        bestseller_data[config["bestseller_data"]["company_id_col"]] = CompanyId
 
         self.save_bestseller_data_to_sql(
             bestseller_data=bestseller_data, CompanyId=CompanyId
