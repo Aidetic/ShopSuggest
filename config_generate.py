@@ -37,6 +37,9 @@ config_file["bestseller_data"] = {
     "secondary_category_col": "<>",
 }
 
+config_file["personalized_recommender"] = {"process": "<>"}  # lightfm, implicit
+
+# fill only if selected in personalized_recommender
 config_file["light_fm"] = {
     "transaction_table_name": "<>",
     "user_table_name": "<>",
@@ -67,8 +70,22 @@ config_file["light_fm"] = {
     "seed": 23,
 }
 
+# fill only if selected in personalized_recommender
+config_file["implicit"] = {
+    "transaction_table_name": "<>",
+    "company_id_col": "<>",
+    "order_date_col": "<>",
+    "user_id_col": "<>",
+    "product_id_col": "<>",
+    "quantity_col": "<>",
+    "revenue_col": "<>",
+    "model_n_components": 30,
+    "model_epochs": 10,
+    "seed": 23,
+}
+
 if TRUSTED_CONNECTION is None:
-    db_connection_string = "/../data/aid_db.db"
+    db_connection_string = "../data/aid_db.db"
 ####################-END OF INPUTS-##########################
 elif TRUSTED_CONNECTION:
     db_connection_string = f"DRIVER={DATABASE_DRIVER};SERVER={DATABASE_SERVER};DATABASE={DATABASE_NAME};Trusted_Connection=yes;"

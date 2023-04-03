@@ -1,2 +1,4 @@
 from .base import BasePersonalizedRecommender
+from .implicit_recommender import ImplicitRecommender
 from .lightfm_hybrid_recommender import LightFMHybridRecommender
+from .personalized_recommender import PersonalizedRecommender

@@ -49,7 +49,7 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
             user_data,
             columns=[config["light_fm"]["user_id_col"]] + user_feature_list,
         )
-        print("Fetched user_data!")
+        logger.info("Fetched user_data!")
 
         # product data
         product_data_query = f"""
@@ -70,7 +70,7 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
             product_data,
             columns=[config["light_fm"]["product_id_col"]] + item_feature_list,
         )
-        print("Fetched product_data!")
+        logger.info("Fetched product_data!")
 
         # transaction data
         transaction_data_query = f"""
@@ -104,7 +104,7 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
                 config["light_fm"]["rating_col"],
             ],
         )
-        print("Fetched transaction_data!")
+        logger.info("Fetched transaction_data!")
 
         return user_data, product_data, transaction_data
 
@@ -238,7 +238,12 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
         all_models = [
             path
             for path in os.listdir(os.path.join(BASE_PATH, PATH_NAME))
-            if str(CompanyId) in path
+            if (
+                config["personalized_recommender"]["process"]
+                + "_model_"
+                + str(CompanyId)
+            )
+            in path
         ]
         if not all_models:
             return None
@@ -340,7 +345,7 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
                 user-item pairs, for each pair there will be 'rating_col'
                 that could be any transactional metric like Revenue(recommended), Quantity, etc
         """
-        print("Inside LightFM Pipeline!")
+        logger.info("Inside LightFM Pipeline!")
 
         item_feature_list = json.loads(
             config["light_fm"]["item_feature_list"].replace("'", '"')
@@ -422,7 +427,8 @@ class LightFMHybridRecommender(BasePersonalizedRecommender):
         BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         PATH_NAME = os.path.join("..", "model")
         FILE_NAME = (
-            "model_"
+            config["personalized_recommender"]["process"]
+            + "_model_"
             + str(CompanyId)
             + datetime.strftime(datetime.now(), "_%Y%m%d")
             + ".pkl"
